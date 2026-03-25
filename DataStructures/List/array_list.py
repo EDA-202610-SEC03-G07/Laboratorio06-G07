@@ -70,7 +70,7 @@ def remove_last(lista):
         lista["size"]-= 1
         return remove
     
-def insert_element(lista, element,pos):
+def insert_element(lista,pos, element):
     lista["elements"].insert(pos,element)
     lista["size"]+= 1
     return lista
