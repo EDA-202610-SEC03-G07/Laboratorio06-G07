@@ -322,26 +322,35 @@ def get_books_by_author_pub_year(catalog, author_name, pub_year):
     - Si el author existe, se obtiene el mapa asociado al año de publicación
     Retorna los libros asociados a un autor y un año de publicación específicos
     """
+    
     # Iniciar medición de tiempo
     start_time = getTime()
-    
+
     # Iniciar medición de memoria
     tracemalloc.start()
     start_memory = getMemory()
-    
-    # TODO Completar la función de consulta
-    resultado = None  # Sustituir con la lógica real
-    
+
+    resultado = al.new_list()
+    books_by_year_author = catalog['books_by_year_author']
+    author_map = lp.get(books_by_year_author, author_name)
+    if author_map:
+        # normalizar pub_year vacío -> "0"
+        if pub_year is None or str(pub_year).strip() == '':
+            pub_year = "0"
+        year_list = lp.get(author_map, pub_year)
+        if year_list:
+            # devolver la lista encontrada
+            resultado = year_list
+
     # Detener medición de memoria
     stop_memory = getMemory()
-    
+
     # Calcular medición de tiempo y memoria
     end_time = getTime()
     tiempo_transcurrido = deltaTime(end_time, start_time)
     memoria_usada = deltaMemory(start_memory, stop_memory)
-    
-    return resultado, tiempo_transcurrido, memoria_usada
 
+    return resultado, tiempo_transcurrido, memoria_usada
 
 #  -------------------------------------------------------------
 # Funciones utilizadas para obtener el tamaño de los mapas
