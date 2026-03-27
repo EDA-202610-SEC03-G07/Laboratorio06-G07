@@ -1,4 +1,4 @@
-import random 
+
 def new_list():
     newlist ={
         "elements": [],
@@ -108,12 +108,12 @@ def default_sort_criteria(element1, element2):
 def selection_sort(lista, sort_criteria):
     tamaño = size(lista)
     for i in range(tamaño):
-        indice = i
+        minimo = i
         for j in range(i + 1, tamaño):
-            if sort_criteria(lista["elements"][j], lista["elements"][indice]) < 0:
-                indice = j
-        if indice != i:
-            exchange(lista, i, indice)
+            if sort_criteria(lista["elements"][j], lista["elements"][minimo]) < 0:
+                minimo = j
+        if minimo != i:
+            exchange(lista, i, minimo)
     return lista
 
 def insertion_sort(my_list, sort_crit):

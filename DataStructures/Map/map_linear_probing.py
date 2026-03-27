@@ -29,7 +29,7 @@ def put(my_map, key, value):
    if pos[0]:
       me.set_value(al.get_element(my_map["table"], pos[1]),value)
    else:
-      al.insert_element(my_map["table"], pos[1], me.new_map_entry(key, value))
+      al.change_info(my_map["table"], pos[1], me.new_map_entry(key, value))
       my_map["size"] += 1
    my_map["current_factor"] = size(my_map)/my_map["capacity"]
    if my_map["current_factor"] > my_map["limit_factor"]:

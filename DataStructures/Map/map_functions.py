@@ -82,3 +82,5 @@ def hash_value(table, key):
 
     value = int((abs(a * h + b) % p) % m)
     return value
+
+    
