@@ -251,7 +251,9 @@ def add_book_tag(catalog, book_tag):
         book_tag_list = lp.get(catalog['book_tags'],t['tag_id'])
         al.add_last(book_tag_list,book_tag)
     else:
-        pass #TODO Completar escenario donde el book_tag no se había agregado al mapa   
+        new_list = al.new_list()
+        al.add_last(new_list, t)
+        lp.put(catalog['book_tags'], t['tag_id'], new_list)
     return catalog
 
 #  -------------------------------------------------------------
@@ -262,8 +264,9 @@ def get_book_info_by_book_id(catalog, good_reads_book_id):
     """
     Retorna toda la informacion que se tenga almacenada de un libro según su good_reads_id.
     """
-    #TODO Completar función de consulta
-    pass
+    return lp.get(catalog['books_by_id'], good_reads_book_id)
+    
+    
 
 
 def get_books_by_author(catalog, author_name):
@@ -288,8 +291,32 @@ def get_books_by_tag(catalog, tag_name):
     de book_tags y finalmente relacionarlo con los datos completos del libro.
 
     """
-    #TODO Completar función de consulta
-    pass
+    result = al.new_list()
+
+    # obtener el tag (ej. {'name': ..., 'tag_id': ...})
+    tag = lp.get(catalog['tags'], tag_name)
+    if not tag:
+        return result
+
+    tag_id = tag.get('tag_id')
+    if tag_id is None:
+        return result
+
+    # obtener la lista de book_tag asociada al tag_id
+    book_tag_list = lp.get(catalog['book_tags'], tag_id)
+    if not book_tag_list:
+        return result
+
+    # por cada book_tag recuperar el libro completo y agregarlo a result
+    for i in range(al.size(book_tag_list)):
+        bt = al.get_element(book_tag_list, i)
+        book_id = bt.get('book_id')
+        if book_id is not None:
+            book = lp.get(catalog['books_by_id'], book_id)
+            if book:
+                al.add_last(result, book)
+
+    return result
 
 
 def get_books_by_author_pub_year(catalog, author_name, pub_year):
