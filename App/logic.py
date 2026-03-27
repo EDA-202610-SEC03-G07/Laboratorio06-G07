@@ -31,9 +31,7 @@ import tracemalloc
 import DataStructures.Map.map_linear_probing as lp
 import DataStructures.List.array_list as al
 import DataStructures.Map.map_separate_chaining as sc
-# TODO Realice la importación del mapa linear probing
-# TODO Realice la importación de ArrayList como estructura de datos auxiliar para sus requerimientos
-# TODO Realice la importación del mapa separate chaining
+
 
 
 data_dir = os.path.dirname(os.path.realpath('__file__')) + '/Data/GoodReads/'
@@ -56,20 +54,19 @@ def new_logic():
 
     #Tabla de Hash que contiene los libros indexados por good_reads_book_id  
     #(good_read_id -> book)
-    catalog['books_by_id'] = lp.new_map(10000) #TODO completar la creación del mapa
+    catalog['books_by_id'] = lp.new_map(10000) 
 
     #Tabla de Hash con la siguiente pareja llave valor: (author_name -> List(books))
-    catalog['books_by_authors'] = lp.new_map(1000) #TODO completar la creación del mapa
+    catalog['books_by_authors'] = lp.new_map(1000) 
 
     #Tabla de Hash con la siguiente pareja llave valor: (tag_name -> tag)
-    catalog['tags'] = lp.new_map(1000) #TODO completar la creación del mapa
-
+    catalog['tags'] = lp.new_map(1000) 
     #Tabla de Hash con la siguiente pareja llave valor: (tag_id -> book_tags)
     catalog['book_tags'] = lp.new_map(1000)
 
     #Tabla de Hash principal que contiene sub-mapas dentro de los valores
     #con la siguiente representación de la pareja llave valor: (author_name -> (original_publication_year -> list(books)))
-    catalog['books_by_year_author'] = lp.new_map(1000) #TODO completar la creación del mapa
+    catalog['books_by_year_author'] = lp.new_map(1000) 
     
     return catalog
 
@@ -205,7 +202,7 @@ def add_book_author_and_year(catalog, author_name, book):
     books_by_year_author = catalog['books_by_year_author']
     pub_year = book['original_publication_year']
     #Si el año de publicación está vacío se reemplaza por un valor simbolico
-    #TODO Completar manejo de los escenarios donde el año de publicación es vacío.
+
     if pub_year == "" or pub_year is None:
         pub_year = "desconocido"
     author_value = lp.get(books_by_year_author,author_name)
@@ -219,7 +216,7 @@ def add_book_author_and_year(catalog, author_name, book):
             pub_year_map = lp.new_map(1000,0.7)
             lp.put(pub_year_map,pub_year,book)
     else:
-        # TODO Completar escenario donde no se había agregado el autor al mapa principal
+
         books = al.new_list()
         al.add_last(books, book)
         pub_year_map = lp.new_map(1000)
@@ -273,7 +270,7 @@ def get_books_by_author(catalog, author_name):
     """
     Retorna los libros asociado al autor ingresado por párametro
     """
-    #TODO Completar función de consulta
+    
     books_by_autor = catalog['books_by_authors']
     books = lp.get(books_by_autor,author_name)
     if books:

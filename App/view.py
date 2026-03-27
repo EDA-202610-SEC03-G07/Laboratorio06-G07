@@ -23,8 +23,11 @@
  *
  * Dario Correal
  """
-
+import tracemalloc
+import time
+import tracemalloc
 import sys
+
 import App.logic as logic
 # TODO Realice la importación del mapa linear probing
 import DataStructures.Map.map_linear_probing as lp
@@ -163,18 +166,57 @@ def main():
 
         elif int(inputs[0]) == 2:
             number = input("Ingrese el id del libro (good_read_book_id) que desea buscar: ")
+            tracemalloc.start()
+            start_mem = tracemalloc.take_snapshot()
+            start_time = _time_ms()
+            
             book = logic.get_book_info_by_book_id(control, number)
+            
+            stop_time = _time_ms()
+            stop_mem = tracemalloc.take_snapshot()
+            tracemalloc.stop()
+
+            tiempo_ms = stop_time - start_time
+            memoria_kb = _delta_memory_kb(start_mem, stop_mem)
+            
             print_book_info(book)
+            print(f"(Consulta) Tiempo: {tiempo_ms:.2f} ms  Memoria: {memoria_kb:.2f} kB\n")
 
         elif int(inputs[0]) == 3:
             authorname = input("Nombre del autor a buscar: ")
+            tracemalloc.start()
+            start_mem = tracemalloc.take_snapshot()
+            start_time = _time_ms()
+            
             author, author_book_list = logic.get_books_by_author(control, authorname)
+            
+            stop_time = _time_ms()
+            stop_mem = tracemalloc.take_snapshot()
+            tracemalloc.stop()
+
+            tiempo_ms = stop_time - start_time
+            memoria_kb = _delta_memory_kb(start_mem, stop_mem)
+            
             print_books_by_author(author,author_book_list)
+            print(f"(Consulta) Tiempo: {tiempo_ms:.2f} ms  Memoria: {memoria_kb:.2f} kB\n")
 
         elif int(inputs[0]) == 4:
             label = input("Etiqueta a buscar: ")
+            tracemalloc.start()
+            start_mem = tracemalloc.take_snapshot()
+            start_time = _time_ms()
+            
             book_list_by_tag = logic.get_books_by_tag(control, label)
+            
+            stop_time = _time_ms()
+            stop_mem = tracemalloc.take_snapshot()
+            tracemalloc.stop()
+
+            tiempo_ms = stop_time - start_time
+            memoria_kb = _delta_memory_kb(start_mem, stop_mem)
+            
             print_books_by_tag(label, book_list_by_tag)
+            print(f"(Consulta) Tiempo: {tiempo_ms:.2f} ms  Memoria: {memoria_kb:.2f} kB\n")
                  
         elif int(inputs[0]) == 5:
             author_name = input("Ingrese el nombre del autor que desea buscar:\n")
@@ -197,3 +239,20 @@ def main():
         else:
             continue
     sys.exit(0)
+    
+    
+'''
+FUNCIONES AUXILIARES PARA MEDICION DE MEMORUIA Y TIEMPO
+'''
+    
+def _time_ms():
+    """Tiempo actual en milisegundos usando time.time()."""
+    return float(time.time() * 1000)
+
+def _delta_memory_kb(start_snapshot, stop_snapshot):
+    """Diferencia entre dos snapshots de tracemalloc en kilobytes."""
+    if start_snapshot is None or stop_snapshot is None:
+        return 0.0
+    stats = stop_snapshot.compare_to(start_snapshot, "filename")
+    delta = sum(stat.size_diff for stat in stats) / 1024.0
+    return delta
